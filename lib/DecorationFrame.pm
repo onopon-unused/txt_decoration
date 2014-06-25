@@ -3,11 +3,11 @@ package lib::DecorationFrame;
 use strict;
 use warnings;
 use Data::Dumper;
-
 sub new { 
     my $class = shift;
     my $self = {
-        decoration_list => [],
+        rule_list => [],
+        count => 0,
     };
     return bless $self, $class;
 }
@@ -19,20 +19,44 @@ sub new {
 =cut
 sub add_decoration_rule{
     my ($self, $params) = @_;
-    	push ($self->{decoration_list}, {rule=>$params});
+    	push ($self->{rule_list}, {rule=>$params});
+    	$self->{count}++;
 }
 
 sub convert{
-	my ($self) = @_;
-	my @a = $self->{decoration_list};
-
-	for (my $i = 0; $i < @a; $i++ ){
-		my $rule = $self->{decoration_list}[$i];
-		print Dumper $rule->{rule};
+	my ($self, $file) = @_;
+	my @text = (
+		"【タイトルだよん",
+		"内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容",
+		"ヤバい、	ゲシュタルト崩壊しそうw",
+		"<<コメントだよん",
+		"コメコメ");
+	my @after_text;
+	foreach my $line (@text){
+		my $set_default = 1;
+		for (my $i = 0; $i < $self->{count}; $i++ ){
+			my $rule = $self->{rule_list}[$i];
+			my @keys = keys $rule->{rule};
+			my $key = $keys[0];
+			#print Dumper $rule->{rule}{$key};
+			if ($line =~ /^$key/){
+				my $method = $rule->{rule}{$key};
+				push (@after_text, $self->$method($line));
+				$set_default = 0;
+				last;
+			}
+		}
+		if ($set_default){
+			my $res = $self->default($line);
+			push (@after_text, $res);
+		}
 	}
-#	foreach my $rule ($self->{decoration_list}){
-#		print Dumper $self->{decoration_list}[0]->{key};
-#	}
+	print Dumper @after_text;
+}
+
+sub default {
+	my ($self, $text) = @_;
+	return "default;"
 }
 
 1;
