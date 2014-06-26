@@ -14,20 +14,27 @@ sub new {
 	return $self;
 }
 
+=head2
+タイトルを生成する
+=cut
 sub title {
 	my ($self, $text) = @_;
 	$text =~ s/【//;
-#	my $length = length $text;
+	$text = "　　　$text　　　";
 	my $length = length(decode('utf-8', $text));
 	my $deco;
+	my $deco_length = 0;
 	for (my $i = 0; $i < $length; $i++){
-		$deco .= "〜";
+		$deco .= "＝";
 	}
 	my $title = "|$text|";
 	$deco = "*$deco*";
-	return ($deco,$title,$deco);
+	return ("\n",$deco,$title,$deco);
 }
 
+=head2
+コメントを生成する
+=cut
 sub comment {
 	my ($self, $text) = @_;
 	$text =~ s/<<//;
@@ -39,6 +46,6 @@ sub comment {
 	}
 	my $comment = "|$text|";
 	$deco = "*$deco*";	
-	return ($deco,$comment,$deco);
+	return ("\n",$deco,$comment,$deco);
 }
 1;

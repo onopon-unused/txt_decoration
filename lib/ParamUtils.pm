@@ -13,15 +13,16 @@ sub get_param {
 }
 
 =head2
- exists_params()
- データが全て存在するか確認する
+ exist_params()
+ 任意のデータが全て存在するか確認する
  1つでもデータが無ければdieする
+ まだ未完成
 =cut
-sub exists_params {
-    my ($self, @params) = @_;
-    foreach my $param (@params){
-        die if !$param;
-    }
-}
+#sub exist_params {
+#    my ($self, @params) = @_;
+#    foreach my $param (@params){
+#        die if !$param;
+#    }
+#}
 
 1;
