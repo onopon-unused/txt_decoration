@@ -1,7 +1,10 @@
+#!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 2;
-use FindBin;
-#use lib "$FindBin::Bin";
-use lib "./";
-use lib::ParamUtil;
+use Test::More tests => 1;
+use lib::ParamUtils;
+
+subtest 'get_param' => sub {
+	lib::ParamUtils->get_param;
+	ok( "OK" );
+}

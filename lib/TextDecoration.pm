@@ -10,7 +10,10 @@ sub new {
 	my $class = shift;
 	my $self = $class->SUPER::new;
 	$self->add_decoration_rule({"【"=>"title"});
-	$self->add_decoration_rule({"<<"=>"comment"});
+	$self->add_decoration_rule({"<<"=>"comment_start"});
+	$self->add_decoration_rule({">>"=>"comment_finish"});
+	$self->{comment_mode} = 0;
+	$self->{comment_length} = 30;
 	return $self;
 }
 
@@ -35,9 +38,10 @@ sub title {
 =head2
 コメントを生成する
 =cut
-sub comment {
+sub comment_start {
 	my ($self, $text) = @_;
 	$text =~ s/<<//;
+	$self->{comment_mode} = 1;
 #	my $length = length $text;
 	my $length = length(decode('utf-8', $text));
 	my $deco;
@@ -48,4 +52,23 @@ sub comment {
 	$deco = "*$deco*";	
 	return ("\n",$deco,$comment,$deco);
 }
+
+sub comment_finish{
+	my ($self, $text) = @_;
+	$self->{comment_mode} = 0;
+	my $line;
+	for (my $i = 0; $i < 30; $i++){
+		$line .= "-";
+	}
+	return "$line";
+}
+
+=head2
+@Override
+sub default {
+	my ($self, $text) = @_;
+	return "$text" if (!$self->{comment_mode});
+}
+=cut
+
 1;
